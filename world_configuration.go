@@ -10,8 +10,11 @@ type WorldConfiguration struct {
 }
 
 type MapConfiguration struct {
-	Min int
-	Max int
+	Min        int
+	Max        int
+	TreeCount  int
+	ShrubCount int
+	RockCount  int
 }
 
 func getWorldConfiguration(fileName string) (WorldConfiguration, error) {

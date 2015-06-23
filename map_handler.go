@@ -12,7 +12,6 @@ import (
 
 // MapSearch gets a stubbed map
 func MapSearch(w http.ResponseWriter, r *http.Request) {
-	log.Print(worldConfiguration)
 	vars := mux.Vars(r)
 	x, err := strconv.Atoi(vars["x"])
 	if err != nil {
@@ -46,19 +45,19 @@ func getStubbedMap(x int, y int) Map {
 }
 
 func getStubbedCells() [][]Cell {
-	width := random(worldConfiguration.Map.Min, worldConfiguration.Map.Max)
-	height := random(worldConfiguration.Map.Min, worldConfiguration.Map.Max)
+	width := randomInt(worldConfig.Map.Min, worldConfig.Map.Max)
+	height := randomInt(worldConfig.Map.Min, worldConfig.Map.Max)
 	cells := make([][]Cell, height)
 	for i := range cells {
 		cells[i] = make([]Cell, width)
 		for j := range cells[i] {
 			cells[i][j] = Cell{
 				ID:       1,
-				Tree:     "101",
-				Rock:     "01",
+				Tree:     randomBinaryString(worldConfig.Map.TreeCount),
+				Rock:     randomBinaryString(worldConfig.Map.RockCount),
 				Treasure: false,
 				Enemy:    10,
-				Shrub:    "00",
+				Shrub:    randomBinaryString(worldConfig.Map.ShrubCount),
 			}
 		}
 	}

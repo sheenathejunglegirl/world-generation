@@ -9,11 +9,11 @@ import (
 
 var port = flag.Int("port", 8080, "web service port")
 var worldConfigFile = flag.String("world-config-file", "world.json", "world configuration file")
-var worldConfiguration WorldConfiguration
+var worldConfig WorldConfiguration
 
 func main() {
 	var err error
-	worldConfiguration, err = getWorldConfiguration(*worldConfigFile)
+	worldConfig, err = getWorldConfiguration(*worldConfigFile)
 
 	if err != nil {
 		log.Fatal(err)

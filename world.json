@@ -1,6 +1,21 @@
 {
-    "Map": {
-	"Min": 10,
-	"Max": 100
-    }
+    	"Map": {
+		"Min": 40,
+		"Max": 100,
+		"TreeCount": 5,
+		"ShrubCount": 5,
+		"RockCount": 3
+    	},
+	"Biomes": {
+		"Barren": {
+			"TreeChance": .02,
+			"ShrubChance": .04,
+			"RockChance": .01
+		},
+		"Forest": {
+			"TreeChance": 300,
+			"ShrubChance": 200,
+			"RockChance": 5
+		}
+	}
 }
