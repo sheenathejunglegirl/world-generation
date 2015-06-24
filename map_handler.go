@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/sheenathejunglegirl/world-generation/random"
 	"log"
 	"net/http"
 	"strconv"
@@ -45,19 +46,25 @@ func getStubbedMap(x int, y int) Map {
 }
 
 func getStubbedCells() [][]Cell {
-	width := randomInt(worldConfig.Map.Min, worldConfig.Map.Max)
-	height := randomInt(worldConfig.Map.Min, worldConfig.Map.Max)
-	cells := make([][]Cell, height)
+	width := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
+	height := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
+	cells := make([][]Cell, width)
 	for i := range cells {
-		cells[i] = make([]Cell, width)
+		log.Println(i)
+		cells[i] = make([]Cell, height)
 		for j := range cells[i] {
+			log.Println(j)
+			tree := random.BinaryString(worldConfig.Map.TreeCount, .80)
+			rock := random.BinaryString(worldConfig.Map.RockCount, .10)
+			shrub := random.BinaryString(worldConfig.Map.ShrubCount, .50)
+
 			cells[i][j] = Cell{
 				ID:       1,
-				Tree:     randomBinaryString(worldConfig.Map.TreeCount),
-				Rock:     randomBinaryString(worldConfig.Map.RockCount),
+				Tree:     tree,
+				Rock:     rock,
 				Treasure: false,
 				Enemy:    10,
-				Shrub:    randomBinaryString(worldConfig.Map.ShrubCount),
+				Shrub:    shrub,
 			}
 		}
 	}

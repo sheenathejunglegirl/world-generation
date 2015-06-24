@@ -8,14 +8,14 @@
     	},
 	"Biomes": {
 		"Barren": {
-			"TreeChance": .02,
-			"ShrubChance": .04,
-			"RockChance": .01
+			"TreeChance": ".02",
+			"ShrubChance": ".04",
+			"RockChance": ".01"
 		},
 		"Forest": {
-			"TreeChance": 300,
-			"ShrubChance": 200,
-			"RockChance": 5
+			"TreeChance": "300",
+			"ShrubChance": "200",
+			"RockChance": "5"
 		}
 	}
 }
