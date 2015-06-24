@@ -13,8 +13,3 @@ type Cell struct {
 	Treasure bool   `json:"treasure"`
 	Enemy    int    `json:"enemy"`
 }
-
-func (c *Cell) applyFilter(filter Filter) {
-	newChance := .80 + float64(filter.Count)
-	c.Tree, _ = random.BinaryString(worldConfig.Map.TreeCount, newChance)
-}

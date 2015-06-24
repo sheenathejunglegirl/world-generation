@@ -2,8 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/larspensjo/Go-simplex-noise/simplexnoise"
 	"github.com/sheenathejunglegirl/world-generation/random"
 	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
@@ -46,28 +48,32 @@ func getStubbedMap(x int, y int) Map {
 }
 
 func getStubbedCells() [][]Cell {
-	width := 40  //random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
-	height := 20 //random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
+	width := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
+	height := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
 	cells := make([][]Cell, height)
-	filters := make([]Filter, height*width*100)
-	filterIndex := 0
+	scale := rand.Float64() / 20
 	for i := range cells {
 		cells[i] = make([]Cell, width)
+		row := ""
 		for j := range cells[i] {
-			tree, treeCount := random.BinaryString(worldConfig.Map.TreeCount, .80)
-			if treeCount == worldConfig.Map.TreeCount {
-				for fi := -5; fi < 5; fi++ {
-					for fj := -5; fj < 5; fj++ {
-						if i+fi >= 0 && i+fi < width && j+fj >= 0 && j+fj < height {
-							filters[filterIndex] = Filter{
-								X:     i + fi,
-								Y:     j + fj,
-								Count: 1,
-							}
-							filterIndex++
-						}
-					}
-				}
+			forest := simplexnoise.Noise2(float64(i)*scale, float64(j)*scale)
+			chanceOfTree := 1.0 + forest
+			if forest > 0 {
+				chanceOfTree = chanceOfTree * (3 * forest)
+			} else {
+				chanceOfTree = chanceOfTree / 2
+			}
+			tree, treeCount := random.BinaryString(worldConfig.Map.TreeCount, chanceOfTree)
+
+			switch {
+			case treeCount == 0:
+				row += " "
+			case treeCount == 1:
+				row += "'"
+			case treeCount == 2:
+				row += "\""
+			case treeCount == 3:
+				row += "\""
 			}
 			rock, _ := random.BinaryString(worldConfig.Map.RockCount, .10)
 			shrub, _ := random.BinaryString(worldConfig.Map.ShrubCount, .50)
@@ -81,16 +87,7 @@ func getStubbedCells() [][]Cell {
 				Shrub:    shrub,
 			}
 		}
-	}
-
-	return applyFilters(filters, cells)
-}
-
-func applyFilters(filters []Filter, cells [][]Cell) [][]Cell {
-	for i, filter := range filters {
-		if filter.Count != 0 {
-			cells[filter.Y][filter.X].applyFilter(filters[i])
-		}
+		log.Println(row)
 	}
 	return cells
 }
