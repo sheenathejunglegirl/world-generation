@@ -58,7 +58,7 @@ func getStubbedCells() [][]Cell {
 			if treeCount == worldConfig.Map.TreeCount {
 				for fi := -5; fi < 5; fi++ {
 					for fj := -5; fj < 5; fj++ {
-						if i+fi > 0 && i+fi < width && j+fj > 0 && j+fj < height {
+						if i+fi >= 0 && i+fi < width && j+fj >= 0 && j+fj < height {
 							filters[filterIndex] = Filter{
 								X:     i + fi,
 								Y:     j + fj,
@@ -83,5 +83,14 @@ func getStubbedCells() [][]Cell {
 		}
 	}
 
+	return applyFilters(filters, cells)
+}
+
+func applyFilters(filters []Filter, cells [][]Cell) [][]Cell {
+	for i, filter := range filters {
+		if filter.Count != 0 {
+			cells[filter.Y][filter.X].applyFilter(filters[i])
+		}
+	}
 	return cells
 }
