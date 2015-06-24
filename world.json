@@ -2,9 +2,9 @@
     	"Map": {
 		"Min": 40,
 		"Max": 100,
-		"TreeCount": 5,
-		"ShrubCount": 5,
-		"RockCount": 3
+		"TreeCount": 3,
+		"ShrubCount": 3,
+		"RockCount":2
     	},
 	"Biomes": {
 		"Barren": {

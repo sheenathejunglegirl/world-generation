@@ -46,17 +46,31 @@ func getStubbedMap(x int, y int) Map {
 }
 
 func getStubbedCells() [][]Cell {
-	width := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
-	height := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
-	cells := make([][]Cell, width)
+	width := 40  //random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
+	height := 20 //random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
+	cells := make([][]Cell, height)
+	filters := make([]Filter, height*width*100)
+	filterIndex := 0
 	for i := range cells {
-		log.Println(i)
-		cells[i] = make([]Cell, height)
+		cells[i] = make([]Cell, width)
 		for j := range cells[i] {
-			log.Println(j)
-			tree := random.BinaryString(worldConfig.Map.TreeCount, .80)
-			rock := random.BinaryString(worldConfig.Map.RockCount, .10)
-			shrub := random.BinaryString(worldConfig.Map.ShrubCount, .50)
+			tree, treeCount := random.BinaryString(worldConfig.Map.TreeCount, .80)
+			if treeCount == worldConfig.Map.TreeCount {
+				for fi := -5; fi < 5; fi++ {
+					for fj := -5; fj < 5; fj++ {
+						if i+fi > 0 && i+fi < width && j+fj > 0 && j+fj < height {
+							filters[filterIndex] = Filter{
+								X:     i + fi,
+								Y:     j + fj,
+								Count: 1,
+							}
+							filterIndex++
+						}
+					}
+				}
+			}
+			rock, _ := random.BinaryString(worldConfig.Map.RockCount, .10)
+			shrub, _ := random.BinaryString(worldConfig.Map.ShrubCount, .50)
 
 			cells[i][j] = Cell{
 				ID:       1,
@@ -68,5 +82,6 @@ func getStubbedCells() [][]Cell {
 			}
 		}
 	}
+
 	return cells
 }
