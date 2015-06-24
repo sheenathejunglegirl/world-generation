@@ -1,9 +1,5 @@
 package main
 
-import (
-	"github.com/sheenathejunglegirl/world-generation/random"
-)
-
 // Cell represents information describing a specific cell of a map
 type Cell struct {
 	ID       int    `json:"id"`

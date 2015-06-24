@@ -5,7 +5,6 @@ import (
 	"github.com/larspensjo/Go-simplex-noise/simplexnoise"
 	"github.com/sheenathejunglegirl/world-generation/random"
 	"log"
-	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
@@ -51,7 +50,7 @@ func getStubbedCells() [][]Cell {
 	width := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
 	height := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
 	cells := make([][]Cell, height)
-	scale := rand.Float64() / 20
+	scale := float64(random.Int(1, 5)) / 100
 	for i := range cells {
 		cells[i] = make([]Cell, width)
 		row := ""
