@@ -55,25 +55,19 @@ func getStubbedCells() [][]Cell {
 	for i := range cells {
 		cells[i] = make([]Cell, width)
 		for j := range cells[i] {
-			forest := simplex.Eval2(float64(i)*scale, float64(j)*scale)
-			chanceOfTree := 1.0 + forest
-			if forest > 0 {
-				chanceOfTree = chanceOfTree * (3 * forest)
-			} else {
-				chanceOfTree = chanceOfTree / 2
-			}
-			tree, _ := random.BinaryString(worldConfig.Map.TreeCount, chanceOfTree)
+			treeFreq := simplex.Eval2(float64(i)*scale, float64(j)*scale)
 			rock, _ := random.BinaryString(worldConfig.Map.RockCount, .10)
 			shrub, _ := random.BinaryString(worldConfig.Map.ShrubCount, .50)
 
 			cells[i][j] = Cell{
 				ID:       1,
-				Tree:     tree,
 				Rock:     rock,
 				Treasure: false,
 				Enemy:    10,
 				Shrub:    shrub,
 			}
+
+			cells[i][j].generateTree(treeFreq)
 		}
 	}
 
