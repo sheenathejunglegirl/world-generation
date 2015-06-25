@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/larspensjo/Go-simplex-noise/simplexnoise"
+	"github.com/ojrac/opensimplex-go"
 	"github.com/sheenathejunglegirl/world-generation/random"
 	"log"
 	"net/http"
@@ -50,30 +50,19 @@ func getStubbedCells() [][]Cell {
 	width := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
 	height := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
 	cells := make([][]Cell, height)
-	scale := float64(random.Int(1, 5)) / 100
+	simplex := opensimplex.NewOpenSimplexWithSeed(time.Now().UTC().UnixNano())
+	scale := .02
 	for i := range cells {
 		cells[i] = make([]Cell, width)
-		row := ""
 		for j := range cells[i] {
-			forest := simplexnoise.Noise2(float64(i)*scale, float64(j)*scale)
+			forest := simplex.Eval2(float64(i)*scale, float64(j)*scale)
 			chanceOfTree := 1.0 + forest
 			if forest > 0 {
 				chanceOfTree = chanceOfTree * (3 * forest)
 			} else {
 				chanceOfTree = chanceOfTree / 2
 			}
-			tree, treeCount := random.BinaryString(worldConfig.Map.TreeCount, chanceOfTree)
-
-			switch {
-			case treeCount == 0:
-				row += " "
-			case treeCount == 1:
-				row += "'"
-			case treeCount == 2:
-				row += "\""
-			case treeCount == 3:
-				row += "\""
-			}
+			tree, _ := random.BinaryString(worldConfig.Map.TreeCount, chanceOfTree)
 			rock, _ := random.BinaryString(worldConfig.Map.RockCount, .10)
 			shrub, _ := random.BinaryString(worldConfig.Map.ShrubCount, .50)
 
@@ -86,7 +75,29 @@ func getStubbedCells() [][]Cell {
 				Shrub:    shrub,
 			}
 		}
+	}
+
+	printMap(cells)
+	return cells
+}
+
+func printMap(cells [][]Cell) {
+	for i := range cells {
+		row := ""
+		for j := range cells[i] {
+			tree := cells[i][j].Tree
+
+			switch {
+			case tree == "000":
+				row += " "
+			case tree == "100" || tree == "010" || tree == "001":
+				row += "'"
+			case tree == "110" || tree == "101" || tree == "011":
+				row += "\""
+			case tree == "111":
+				row += "#"
+			}
+		}
 		log.Println(row)
 	}
-	return cells
 }
