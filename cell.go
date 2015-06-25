@@ -8,6 +8,7 @@ import (
 type Cell struct {
 	ID       int    `json:"id"`
 	Tree     string `json:"tree"`
+	Water    string `json:"water"`
 	Shrub    string `json:"shrub"`
 	Rock     string `json:"rock"`
 	Treasure bool   `json:"treasure"`
@@ -22,4 +23,12 @@ func (c *Cell) generateTree(frequency float64) {
 		chanceOfTree = chanceOfTree / 2
 	}
 	c.Tree, _ = random.BinaryString(worldConfig.Map.TreeCount, chanceOfTree)
+}
+
+func (c *Cell) generateWater(frequency float64) {
+	if frequency > .5 {
+		c.Water = "1"
+	} else {
+		c.Water = "0"
+	}
 }

@@ -50,12 +50,14 @@ func getStubbedCells() [][]Cell {
 	width := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
 	height := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
 	cells := make([][]Cell, height)
-	simplex := opensimplex.NewOpenSimplexWithSeed(time.Now().UTC().UnixNano())
+	treeSimplex := opensimplex.NewOpenSimplexWithSeed(time.Now().UTC().UnixNano())
+	waterSimplex := opensimplex.NewOpenSimplexWithSeed(time.Now().UTC().UnixNano())
 	scale := .02
 	for i := range cells {
 		cells[i] = make([]Cell, width)
 		for j := range cells[i] {
-			treeFreq := simplex.Eval2(float64(i)*scale, float64(j)*scale)
+			treeFreq := treeSimplex.Eval2(float64(i)*scale, float64(j)*scale)
+			waterFreq := waterSimplex.Eval2(float64(i)*scale, float64(j)*scale)
 			rock, _ := random.BinaryString(worldConfig.Map.RockCount, .10)
 			shrub, _ := random.BinaryString(worldConfig.Map.ShrubCount, .50)
 
@@ -68,6 +70,7 @@ func getStubbedCells() [][]Cell {
 			}
 
 			cells[i][j].generateTree(treeFreq)
+			cells[i][j].generateWater(waterFreq)
 		}
 	}
 
@@ -80,8 +83,11 @@ func printMap(cells [][]Cell) {
 		row := ""
 		for j := range cells[i] {
 			tree := cells[i][j].Tree
+			water := cells[i][j].Water
 
 			switch {
+			case water == "1":
+				row += "~"
 			case tree == "000":
 				row += " "
 			case tree == "100" || tree == "010" || tree == "001":
