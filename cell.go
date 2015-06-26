@@ -27,8 +27,8 @@ func (c *Cell) generateTree(frequency float64) {
 
 func (c *Cell) generateWater(frequency float64) {
 	if frequency > .5 {
-		c.Water = "1"
+		c.Water = "000000001"
 	} else {
-		c.Water = "0"
+		c.Water = "000000000"
 	}
 }

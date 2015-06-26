@@ -5,9 +5,9 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "debian-64"
+  config.vm.box_url = "https://github.com/holms/vagrant-jessie-box/releases/download/Jessie-v0.1/Debian-jessie-amd64-netboot.box"
+  config.vm.network "private_network", ip: "192.168.50.1"
 
-  config.vm.network "forwarded_port", guest: 8080, host: 8080
-
-  config.vm.provision :shell, :path => ".vagrant/setup.sh"
+  config.vm.provision :shell, :path => "vagrant/setup.sh"
 end

@@ -74,7 +74,49 @@ func getStubbedCells() [][]Cell {
 		}
 	}
 
+	cells = smoothWater(cells)
+
 	printMap(cells)
+	return cells
+}
+
+func smoothWater(cells [][]Cell) [][]Cell {
+	water := "000000001"
+	noWater := "000000000"
+	above, below, left, right := water, water, water, water
+	for i := range cells {
+		for j := range cells[i] {
+			if water == cells[i][j].Water {
+				if i-1 > 0 {
+					above = cells[i-1][j].Water
+				}
+				if i+1 < len(cells)-1 {
+					below = cells[i+1][j].Water
+				}
+				if j-1 > 0 {
+					left = cells[i][j-1].Water
+				}
+				if j+1 < len(cells[i])-1 {
+					right = cells[i][j+1].Water
+				}
+				if above == noWater && left == noWater {
+					cells[i][j].Water = "100000000"
+				} else if below == noWater && left == noWater {
+					cells[i][j].Water = "001000000"
+				} else if left == noWater {
+					cells[i][j].Water = "010000000"
+				} else if above == noWater && right == noWater {
+					cells[i][j].Water = "000100000"
+				} else if below == noWater && right == noWater {
+					cells[i][j].Water = "000010000"
+				} else if above == noWater {
+					cells[i][j].Water = "000000100"
+				} else if below == noWater {
+					cells[i][j].Water = "000000010"
+				}
+			}
+		}
+	}
 	return cells
 }
 
@@ -86,7 +128,9 @@ func printMap(cells [][]Cell) {
 			water := cells[i][j].Water
 
 			switch {
-			case water == "1":
+			case water == "000000001":
+				row += "="
+			case water != "000000000":
 				row += "~"
 			case tree == "000":
 				row += " "
