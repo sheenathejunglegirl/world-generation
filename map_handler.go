@@ -66,9 +66,8 @@ func getStartPoints(cells [][]Cell) (int, int) {
 }
 
 func getStubbedCells() [][]Cell {
-	width := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
-	height := random.Int(worldConfig.Map.Min, worldConfig.Map.Max)
-	cells := make([][]Cell, height)
+	width := 100
+	cells := make([][]Cell, width)
 	treeSimplex := opensimplex.NewOpenSimplexWithSeed(time.Now().UTC().UnixNano())
 	waterSimplex := opensimplex.NewOpenSimplexWithSeed(time.Now().UTC().UnixNano())
 	scale := .02
