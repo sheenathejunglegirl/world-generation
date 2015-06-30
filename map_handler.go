@@ -37,13 +37,27 @@ func MapSearch(w http.ResponseWriter, r *http.Request) {
 }
 
 func getStubbedMap(x int, y int) Map {
+	stubbedCells := getStubbedCells()
+	startingX, startingY := getStartPoints(stubbedCells)
+	printMap(stubbedCells, startingX, startingY)
 	return Map{
 		ID:            1,
 		X:             x,
 		Y:             y,
-		Cells:         getStubbedCells(),
+		Cells:         stubbedCells,
 		GeneratedTime: time.Now(),
 	}
+}
+
+func getStartPoints(cells [][]Cell) (int, int) {
+	for true {
+		randomX := random.Int(0, len(cells))
+		randomY := random.Int(0, len(cells[0]))
+		if cells[randomX][randomY].Water == "000000000" {
+			return randomX, randomY
+		}
+	}
+	return 0, 0
 }
 
 func getStubbedCells() [][]Cell {
@@ -76,7 +90,6 @@ func getStubbedCells() [][]Cell {
 
 	cells = smoothWater(cells)
 
-	printMap(cells)
 	return cells
 }
 
@@ -120,7 +133,7 @@ func smoothWater(cells [][]Cell) [][]Cell {
 	return cells
 }
 
-func printMap(cells [][]Cell) {
+func printMap(cells [][]Cell, startingX int, startingY int) {
 	for i := range cells {
 		row := ""
 		for j := range cells[i] {
@@ -128,6 +141,8 @@ func printMap(cells [][]Cell) {
 			water := cells[i][j].Water
 
 			switch {
+			case startingX == i && startingY == j:
+				row += "X"
 			case water == "000000001":
 				row += "="
 			case water != "000000000":
