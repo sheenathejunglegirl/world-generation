@@ -40,10 +40,15 @@ func getStubbedMap(x int, y int) Map {
 	stubbedCells := getStubbedCells()
 	startingX, startingY := getStartPoints(stubbedCells)
 	printMap(stubbedCells, startingX, startingY)
+	starting := Starting{
+		X: startingX,
+		Y: startingY,
+	}
 	return Map{
 		ID:            1,
 		X:             x,
 		Y:             y,
+		Starting:      starting,
 		Cells:         stubbedCells,
 		GeneratedTime: time.Now(),
 	}
